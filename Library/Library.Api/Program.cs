@@ -4,7 +4,6 @@ using Library.Business.Abstract;
 using Library.Business.Concrete;
 using Library.DataAccess.Abstract;
 using Library.DataAccess.Concrete.Sql;
-using Library.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +26,7 @@ builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Identity"));
 });
 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -63,6 +62,12 @@ builder.Services.ConfigureApplicationCookie(options =>
         HttpOnly = true,
     };
 });
+
+/*----------------------------- 
+|
+| JWT SETTINGS
+|
+*/
 
 /*----------------------------- 
 |

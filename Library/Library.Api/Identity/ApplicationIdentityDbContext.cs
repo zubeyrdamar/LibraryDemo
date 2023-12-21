@@ -1,11 +1,10 @@
-﻿using Library.Entity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Api.Identity
 {
-    public class ApplicationIdentityDbContext : IdentityDbContext<User>
+    public class ApplicationIdentityDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : base(options) { }
 
@@ -24,33 +23,30 @@ namespace Library.Api.Identity
                 {
                     Id = adminRoleId,
                     ConcurrencyStamp = adminRoleId,
-                    Name = "Admin",
-                    NormalizedName = "Admin".ToUpper()
+                    Name = CustomUserRoles.Admin.ToString(),
+                    NormalizedName = CustomUserRoles.Admin.ToString().ToUpper()
                 },
                 new IdentityRole
                 {
                     Id = visitorRoleId,
                     ConcurrencyStamp = visitorRoleId,
-                    Name = "Visitor",
-                    NormalizedName = "Visitor".ToUpper()
+                    Name = CustomUserRoles.Visitor.ToString(),
+                    NormalizedName = CustomUserRoles.Visitor.ToString().ToUpper()
                 },
             };
 
             // Define Admin
 
             var adminId = Guid.NewGuid().ToString();
-            var admin = new User
+            var admin = new IdentityUser
             {
                 Id = adminId,
-                FullName = "Admin",
                 Email = "admin@example.com",
                 NormalizedEmail = "admin@example.com".ToUpper(),
                 UserName = "admin",
-                NormalizedUserName = "admin".ToUpper(),
-                UpdatedAt = DateTime.Now,
-                CreatedAt = DateTime.Now,
+                NormalizedUserName = "admin".ToUpper()
             };
-            PasswordHasher<User> ph = new PasswordHasher<User>();
+            PasswordHasher<IdentityUser> ph = new PasswordHasher<IdentityUser>();
             admin.PasswordHash = ph.HashPassword(admin, "1234");
 
             // Define Admin Role 
@@ -64,8 +60,14 @@ namespace Library.Api.Identity
             // Seed Data
 
             builder.Entity<IdentityRole>().HasData(roles);
-            builder.Entity<User>().HasData(admin);
+            builder.Entity<IdentityUser>().HasData(admin);
             builder.Entity<IdentityUserRole<string>>().HasData(adminRole);
         }
+    }
+
+    public enum CustomUserRoles
+    {
+        Admin,
+        Visitor
     }
 }
