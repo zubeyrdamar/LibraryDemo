@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Library.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialLibraryCreate : Migration
+    public partial class LibraryInitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,6 @@ namespace Library.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BorrowingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -47,12 +46,18 @@ namespace Library.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Borrowing", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Borrowing_Books_Id",
-                        column: x => x.Id,
+                        name: "FK_Borrowing_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Borrowing_BookId",
+                table: "Borrowing",
+                column: "BookId",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -15,7 +15,7 @@ namespace Library.DataAccess.Concrete
             }
         }
 
-        public TEntity Read(int id)
+        public TEntity Read(Guid id)
         {
             using (var context = new TContext())
             {

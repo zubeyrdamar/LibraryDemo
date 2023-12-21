@@ -32,9 +32,9 @@ namespace Library.Business.Concrete
             repository.Update(Book);
         }
 
-        public void Delete(Guid Id)
+        public void Delete(Book Book)
         {
-            repository.Delete(Id);
+            repository.Delete(Book);
         }
     }
 }

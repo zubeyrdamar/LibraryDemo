@@ -10,11 +10,12 @@ namespace Library.DataAccess.Concrete.Sql
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=db_library;Trusted_Connection=True;TrustServerCertificate=True");
         }
 
+        /*
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>().HasOne(o => o.Borrowing).WithOne(o => o.Book).HasForeignKey<Borrowing>(o => o.Id);
         }
-
+        */
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Borrowing> Borrowing { get; set; }

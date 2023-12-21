@@ -3,7 +3,7 @@ using Library.Entity;
 
 namespace Library.DataAccess.Concrete.Sql
 {
-    public class SqlBookRepository : GenericRepository<Book, LibraryDbContext>, IUserRepository
+    public class SqlBookRepository : GenericRepository<Book, LibraryDbContext>, IBookRepository
     {
 
     }

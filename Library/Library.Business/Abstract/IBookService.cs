@@ -8,6 +8,6 @@ namespace Library.Business.Abstract
         Book Read(Guid id);
         void Create(Book Book);
         void Update(Book Book);
-        void Delete(Guid Id);
+        void Delete(Book Book);
     }
 }

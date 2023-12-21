@@ -12,7 +12,6 @@ namespace Library.Entity
         public DateTime BorrowingDate { get; set; }
         public DateTime ReturningDate { get; set; }
 
-        public User User { get; set; }
         public Book Book { get; set; }
     }
 }

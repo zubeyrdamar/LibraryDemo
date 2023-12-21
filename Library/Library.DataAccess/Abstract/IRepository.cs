@@ -6,6 +6,6 @@
         T Read(Guid id);
         void Create(T entity);
         void Update(T entity);
-        void Delete(Guid id);
+        void Delete(T entity);
     }
 }

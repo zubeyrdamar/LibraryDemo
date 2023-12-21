@@ -8,6 +8,6 @@ namespace Library.Business.Abstract
         Borrowing Read(Guid id);
         void Create(Borrowing Borrowing);
         void Update(Borrowing Borrowing);
-        void Delete(Guid id);
+        void Delete(Borrowing Borrowing);
     }
 }
