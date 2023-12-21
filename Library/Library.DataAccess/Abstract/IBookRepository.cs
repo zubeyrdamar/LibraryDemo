@@ -2,7 +2,7 @@
 
 namespace Library.DataAccess.Abstract
 {
-    public interface IUserRepository : IRepository<Book>
+    public interface IBookRepository : IRepository<Book>
     {
 
     }
