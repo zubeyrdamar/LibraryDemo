@@ -31,9 +31,6 @@ namespace Library.DataAccess.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("BorrowingId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -60,6 +57,7 @@ namespace Library.DataAccess.Migrations
             modelBuilder.Entity("Library.Entity.Borrowing", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BookId")
@@ -85,6 +83,9 @@ namespace Library.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
                     b.ToTable("Borrowing");
                 });
 
@@ -92,7 +93,7 @@ namespace Library.DataAccess.Migrations
                 {
                     b.HasOne("Library.Entity.Book", "Book")
                         .WithOne("Borrowing")
-                        .HasForeignKey("Library.Entity.Borrowing", "Id")
+                        .HasForeignKey("Library.Entity.Borrowing", "BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
