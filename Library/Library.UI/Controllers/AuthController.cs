@@ -1,4 +1,5 @@
 ﻿using Library.UI.Models.Auth;
+using Library.UI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +9,7 @@ namespace Library.UI.Controllers
     public class AuthController : Controller
     {
         private readonly IHttpClientFactory httpClientFactory;
+
         public AuthController(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
@@ -58,11 +60,15 @@ namespace Library.UI.Controllers
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
                 httpResponseMessage.EnsureSuccessStatusCode();
 
-                var response = await httpResponseMessage.Content.ReadAsStringAsync();
+                var response = await httpResponseMessage.Content.ReadFromJsonAsync<LoginResponseDTO>();
 
                 if (response is not null)
                 {
-                    return RedirectToAction("Users", "Front");
+                    // Save user data as session
+                    HttpContext.Session.SetString("JWT", response.token);
+                    HttpContext.Session.SetString("Role", response.role);
+
+                    return RedirectToAction("Books", "Front");
                 }
 
                 return View("~/Views/Auth/Login.cshtml", model);

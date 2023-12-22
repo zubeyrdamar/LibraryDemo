@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Library.UI.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.UI.Controllers
 {
     public class FrontController : Controller
     {
         private readonly IHttpClientFactory httpClientFactory;
+
         public FrontController(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
@@ -21,24 +23,23 @@ namespace Library.UI.Controllers
             return View("~/Views/Auth/Login.cshtml");
         }
 
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Books()
         {
             try
             {
                 var client = httpClientFactory.CreateClient();
-                var httpResponseMessage = await client.GetAsync("http://localhost:5224/api/auth");
+                var httpResponseMessage = await client.GetAsync("http://localhost:5224/api/books");
                 httpResponseMessage.EnsureSuccessStatusCode();
-                var response = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                ViewBag.Response = response;
+                List<BookResponseDTO> response = [.. await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<BookResponseDTO>>()];
+                ViewBag.Books = response;
 
-                return View("~/Views/Auth/Users.cshtml");
+                return View("~/Views/Book/List.cshtml");
             }
             catch (Exception e)
             {
                 throw;
             }
         }
-
     }
 }

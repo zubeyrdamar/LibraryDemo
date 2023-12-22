@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Business", "Library
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.UI", "Library.UI\Library.UI.csproj", "{F00329FE-5C84-4013-B337-EC88F1AD6A26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Api", "Library.Api\Library.Api.csproj", "{AFE3E99D-6D10-46AE-AFA0-77F53D6BDD53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Api", "Library.Api\Library.Api.csproj", "{AFE3E99D-6D10-46AE-AFA0-77F53D6BDD53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
