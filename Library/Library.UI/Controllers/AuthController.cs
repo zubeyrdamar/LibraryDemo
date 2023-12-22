@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Library.UI.Models.Auth;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Text.Json;
 
 namespace Library.UI.Controllers
 {
@@ -10,31 +13,65 @@ namespace Library.UI.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Users()
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             try
             {
                 var client = httpClientFactory.CreateClient();
-                var httpResponseMessage = await client.GetAsync("http://localhost:5224/api/auth");
+                var httpRequestMessage = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri("http://localhost:5224/api/auth/register"),
+                    Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
+                };
+                var httpResponseMessage = await client.SendAsync(httpRequestMessage);
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 var response = await httpResponseMessage.Content.ReadAsStringAsync();
-                ViewBag.Response = response;
+                
+                if(response is not null)
+                {
+                    return RedirectToAction("Login", "Front", new { message = "Successfully Registered" });
+                }
 
-                return View();
+                return View("~/Views/Auth/Register.cshtml", model);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
                 throw;
             }
         }
 
-        [HttpGet]
-        public IActionResult Register()
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return View();
+            try
+            {
+                var client = httpClientFactory.CreateClient();
+                var httpRequestMessage = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri("http://localhost:5224/api/auth/login"),
+                    Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
+                };
+                var httpResponseMessage = await client.SendAsync(httpRequestMessage);
+                httpResponseMessage.EnsureSuccessStatusCode();
+
+                var response = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                if (response is not null)
+                {
+                    return RedirectToAction("Users", "Front");
+                }
+
+                return View("~/Views/Auth/Login.cshtml", model);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
+
     }
 }

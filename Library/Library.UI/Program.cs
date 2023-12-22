@@ -27,8 +27,12 @@ app.UseAuthorization();
 |
 */
 
-app.MapControllerRoute(name: "register", pattern: "/users", defaults: new { controller = "Auth", action = "Users" });
+app.MapControllerRoute(name: "users", pattern: "/users", defaults: new { controller = "Front", action = "Users" });
+
+app.MapControllerRoute(name: "register-view", pattern: "/register-view", defaults: new { controller = "Front", action = "Register" });
+app.MapControllerRoute(name: "login-view", pattern: "/login-view", defaults: new { controller = "Front", action = "Login" });
 
 app.MapControllerRoute(name: "register", pattern: "/register", defaults: new { controller = "Auth", action = "Register" });
+app.MapControllerRoute(name: "login", pattern: "/login", defaults: new { controller = "Auth", action = "Login" });
 
 app.Run();
