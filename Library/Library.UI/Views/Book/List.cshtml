@@ -1,0 +1,25 @@
+﻿<h1>Books</h1>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr scope="col">
+                    <td>Name</td>
+                    <td>Author</td>
+                    <td>Description</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in ViewBag.Books)
+                {
+                    <tr scop="row">
+                        <td>@book.Name</td>
+                        <td>@book.Author</td>
+                        <td>@book.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

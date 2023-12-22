@@ -1,6 +1,5 @@
 ﻿using Library.Api.Identity;
 using Library.Api.Models.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -78,7 +77,11 @@ namespace Library.Api.Controllers
             var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (result.Succeeded)
             {
-                return Ok(new { token = GenerateJWT(user) });
+                return Ok(new 
+                { 
+                    token = GenerateJWT(user),
+                    role = (await userManager.GetRolesAsync(user))[0]
+                });
             }
 
             return BadRequest("Invalid Credentials");
