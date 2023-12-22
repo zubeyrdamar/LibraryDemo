@@ -2,15 +2,12 @@
 
 namespace Library.Api.Models.Borrowing
 {
-    public class BorrowDTO
+    public class ReturnDTO
     {
         [Required]
         public Guid UserId { get; set; }
 
         [Required]
         public Guid BookId { get; set; }
-
-        [Required]
-        public int Duration { get; set; }
     }
 }

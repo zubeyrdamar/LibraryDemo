@@ -22,6 +22,11 @@ namespace Library.Business.Concrete
             return repository.Read(Id);
         }
 
+        public Borrowing Find(Guid BookId)
+        {
+            return repository.Find(BookId);
+        }
+
         public void Create(Borrowing Borrowing)
         {
             repository.Create(Borrowing);

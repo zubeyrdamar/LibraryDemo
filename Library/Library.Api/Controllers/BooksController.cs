@@ -34,7 +34,7 @@ namespace Library.Api.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
-            var book = service.Read(id);
+            var book = service.Details(id);
             if (book == null) { return NotFound(); }
 
             var user = await userManager.FindByIdAsync(book.Borrowing.UserId.ToString());
@@ -45,6 +45,7 @@ namespace Library.Api.Controllers
                 Description = book.Description,
                 Author = book.Author,
                 ImageUrl = book.ImageUrl,
+                IsBorrowed = book.IsBorrowed,
                 User = user ?? null
             };
 
@@ -57,6 +58,8 @@ namespace Library.Api.Controllers
             if (bookDTO == null) { return BadRequest(); }
             var book = mapper.Map<Book>(bookDTO);
             book.IsBorrowed = false;
+            book.UpdatedAt = DateTime.Now;
+            book.CreatedAt = DateTime.Now;
             service.Create(book);
             return Ok();
         }
@@ -71,6 +74,7 @@ namespace Library.Api.Controllers
             tempBook.Description = book.Description;
             tempBook.Author = book.Author;
             tempBook.ImageUrl = book.ImageUrl;
+            tempBook.UpdatedAt = DateTime.Now;
             service.Update(tempBook);
             return Ok();
         }
