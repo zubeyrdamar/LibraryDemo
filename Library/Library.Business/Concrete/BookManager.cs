@@ -22,6 +22,11 @@ namespace Library.Business.Concrete
             return repository.Read(Id);
         }
 
+        public Book Details(Guid Id)
+        {
+            return repository.Details(Id);
+        }
+
         public void Create(Book Book)
         {
             repository.Create(Book);
