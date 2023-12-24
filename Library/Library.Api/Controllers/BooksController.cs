@@ -37,16 +37,21 @@ namespace Library.Api.Controllers
             var book = service.Details(id);
             if (book == null) { return NotFound(); }
 
-            var user = await userManager.FindByIdAsync(book.Borrowing.UserId.ToString());
+            var user = new IdentityUser();
+            if(book.Borrowing != null)
+            {
+                 user = await userManager.FindByIdAsync(book.Borrowing.UserId.ToString());
+            }
 
             var bookDTO = new BookDetailsDTO
             {
+                Id = id,
                 Name = book.Name,
                 Description = book.Description,
                 Author = book.Author,
                 ImageUrl = book.ImageUrl,
                 IsBorrowed = book.IsBorrowed,
-                User = user ?? null
+                User = user
             };
 
             return Ok(bookDTO);
