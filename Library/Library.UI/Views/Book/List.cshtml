@@ -17,7 +17,6 @@
             <thead>
                 <tr scope="col">
                     <td>#</td>
-                    <td>Id</td>
                     <td>Name</td>
                     <td>Author</td>
                     <td>Description</td>
@@ -28,20 +27,35 @@
             <tbody>
                 @foreach (var book in ViewBag.Books)
                 {
+                    var msg = "";
+                    var cls = "";
+                    @if (@book.IsBorrowed)
+                    {
+                        msg = "Taken";
+                        cls = "text-danger";
+                    }
+                    else
+                    {
+                        msg = "Available";
+                        cls = "text-success";
+                    }
+
                     <tr scop="row">
                         <td style="width: 200px"><img src="./img/@book.ImageUrl" width="180"/></td>
-                        <td>@book.Id</td>
                         <td>@book.Name</td>
                         <td>@book.Author</td>
                         <td>@book.Description</td>
-                        <td>@book.IsBorrowed</td>
+                        <td><b class="@cls">@msg</b></td>
                         <td>
                             <a class="btn btn-sm btn-primary" asp-controller="Front" asp-action="Detail" asp-route-id="@book.Id">Details</a>
                             @if ((@HttpContextAccessor.HttpContext.Session.GetString("Role") == "Admin"))
                             {
                                 <br />
                                 <a class="btn btn-sm btn-warning mt-2" asp-controller="Front" asp-action="Update" asp-route-id="@book.Id">Edit</a>
-                                <a class="btn btn-sm btn-danger mt-2" asp-controller="Front" asp-action="Delete" asp-route-id="@book.Id">Delete</a>
+                                @if (@book.IsBorrowed == false)
+                                {
+                                    <a class="btn btn-sm btn-danger mt-2" asp-controller="Front" asp-action="Delete" asp-route-id="@book.Id">Delete</a>
+                                }
                             }
                         </td>
                     </tr>

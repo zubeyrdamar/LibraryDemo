@@ -51,7 +51,8 @@ namespace Library.Api.Controllers
                 Author = book.Author,
                 ImageUrl = book.ImageUrl,
                 IsBorrowed = book.IsBorrowed,
-                User = user
+                Borrowing = book.Borrowing,
+                User = user,
             };
 
             return Ok(bookDTO);
@@ -91,6 +92,7 @@ namespace Library.Api.Controllers
             var book = service.Read(id);
             if (book == null) { return BadRequest(); }
 
+            if(book.IsBorrowed == true) { return BadRequest(); }
             service.Delete(book);
             return Ok();
         }
