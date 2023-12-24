@@ -1,5 +1,4 @@
 ﻿using Library.UI.Models.Auth;
-using Library.UI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
@@ -20,6 +19,8 @@ namespace Library.UI.Controllers
         {
             try
             {
+                if (!ModelState.IsValid) { return View(model); }
+
                 var client = httpClientFactory.CreateClient();
                 var httpRequestMessage = new HttpRequestMessage()
                 {
@@ -41,7 +42,7 @@ namespace Library.UI.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return RedirectToAction("Error", "Front", new { error = e.Message });
             }
         }
 
@@ -50,6 +51,8 @@ namespace Library.UI.Controllers
         {
             try
             {
+                if (!ModelState.IsValid) { return View(model); }
+
                 var client = httpClientFactory.CreateClient();
                 var httpRequestMessage = new HttpRequestMessage()
                 {
@@ -60,13 +63,14 @@ namespace Library.UI.Controllers
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
                 httpResponseMessage.EnsureSuccessStatusCode();
 
-                var response = await httpResponseMessage.Content.ReadFromJsonAsync<LoginResponseDTO>();
+                var response = await httpResponseMessage.Content.ReadFromJsonAsync<UserViewModel>();
 
                 if (response is not null)
                 {
                     // Save user data as session
                     HttpContext.Session.SetString("JWT", response.token);
                     HttpContext.Session.SetString("Role", response.role);
+                    HttpContext.Session.SetString("UserId", response.user);
 
                     return RedirectToAction("Books", "Front");
                 }
@@ -75,7 +79,21 @@ namespace Library.UI.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return RedirectToAction("Error", "Front", new { error = e.Message });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            try
+            {
+                HttpContext.Session.Clear();
+                return View("~/Views/Auth/Login.cshtml");
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Error", "Front", new { error = e.Message });
             }
         }
 

@@ -19,12 +19,25 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1" style="justify-content: right">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Front" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Front" asp-action="Register">Register</a>
-                        </li>
+                        @if (@HttpContextAccessor.HttpContext.Session.GetString("JWT") == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Front" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Front" asp-action="Register">Register</a>
+                            </li>
+                        }
+                        else{
+
+                            <li class="nav-item">
+
+                                <form asp-controller="Auth" asp-action="Logout" method="get">
+                                    <button type="submit" class="btn">Logout</button>
+                                </form>
+                                
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

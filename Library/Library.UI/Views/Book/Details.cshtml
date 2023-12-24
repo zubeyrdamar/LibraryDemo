@@ -1,0 +1,23 @@
+﻿<h1>@ViewBag.Book.Name</h1>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <img src="/img/@ViewBag.Book.ImageUrl" style="width:100%;"/>
+    </div>
+    <div class="col-md-8">
+        <p>@ViewBag.Book.Description</p>
+        <br />
+        <p>@ViewBag.Book.Author</p>
+        <hr />
+        <div>
+            @if (ViewBag.Book.IsBorrowed)
+            {
+                <a href="#" class="btn btn-warning">Return</a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-primary">Borrow</a>
+            }
+        </div>
+    </div>
+</div>
