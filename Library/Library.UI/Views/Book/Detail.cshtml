@@ -1,0 +1,62 @@
+﻿@model Library.UI.Models.Borrowing.BorrowViewModel
+
+<h1>@ViewBag.Book.Name</h1>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <img src="/img/@ViewBag.Book.ImageUrl" style="width:100%;"/>
+    </div>
+    <div class="col-md-8">
+        <p>@ViewBag.Book.Description</p>
+        <br />
+        <p>@ViewBag.Book.Author</p>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                @if (ViewBag.Book.IsBorrowed)
+                {
+                    <b class="text-primary">Information</b>
+                    @if (ViewBag.Book.User.Id == @HttpContextAccessor.HttpContext.Session.GetString("UserId"))
+                    {
+                        <p>You have to return book until @ViewBag.Book.Borrowing.ReturningDate</p>
+                        <br />
+
+                        <form asp-controller="Borrowing" asp-action="Return" method="post" class="mt-3">
+
+                            <input asp-for="UserId" value="@HttpContextAccessor.HttpContext.Session.GetString("UserId")" type="hidden" class="form-control" />
+                            <input asp-for="BookId" value="@ViewBag.Book.Id" type="hidden" class="form-control" />
+
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-warning">Return</button>
+                            </div>
+
+                        </form>
+                    }
+                    else
+                    {
+                        <p>This book is taken by someone else and should be back until @ViewBag.Book.Borrowing.ReturningDate. Please check later.</p>
+                    }
+                }
+                else
+                {
+                    <form asp-controller="Borrowing" asp-action="Borrow" method="post" class="mt-3">
+
+                        <input asp-for="UserId" value="@HttpContextAccessor.HttpContext.Session.GetString("UserId")" type="hidden" class="form-control" />
+                        <input asp-for="BookId" value="@ViewBag.Book.Id" type="hidden" class="form-control" />
+
+                        <div class="mt-3">
+                            <label asp-for="Duration" class="form-label">Duration (in days)</label>
+                            <input asp-for="Duration" class="form-control" min="1" value="14"/>
+                            <span asp-validation-for="Duration" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Borrow</button>
+                        </div>
+
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

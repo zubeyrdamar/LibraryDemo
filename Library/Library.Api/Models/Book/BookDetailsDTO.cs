@@ -11,6 +11,7 @@ namespace Library.Api.Models.Book
         public string ImageUrl { get; set; }
         public bool IsBorrowed { get; set; }
 
+        public Entity.Borrowing Borrowing { get; set; }
         public IdentityUser User { get; set; }
     }
 }

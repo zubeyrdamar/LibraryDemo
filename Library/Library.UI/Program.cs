@@ -58,4 +58,8 @@ app.MapControllerRoute(name: "book-create", pattern: "/book/create", defaults: n
 app.MapControllerRoute(name: "book-update", pattern: "/book/update", defaults: new { controller = "Books", action = "Update" });
 app.MapControllerRoute(name: "book-delete", pattern: "/book/delete", defaults: new { controller = "Books", action = "Delete" });
 
+// Borrowing
+app.MapControllerRoute(name: "book-borrow", pattern: "/book/borrow", defaults: new { controller = "Borrowing", action = "Borrow" });
+app.MapControllerRoute(name: "book-return", pattern: "/book/return", defaults: new { controller = "Borrowing", action = "Return" });
+
 app.Run();
