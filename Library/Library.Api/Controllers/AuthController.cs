@@ -14,60 +14,81 @@ namespace Library.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        
+        private readonly ILogger<AuthController> logger;
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public AuthController(ILogger<AuthController> logger, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
         {
+            this.logger = logger;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetUsers()
-        {
-            return Ok(userManager.Users.ToList());
-        }
 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(RegisterDTO model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest("Validation Error");
-            }
+                // validate body
+                if (!ModelState.IsValid)
+                {
+                    logger.LogInformation("Validation error occured while attempting to register.");
+                    throw new Exception("Validation error occured while attempting to register.");
+                }
+                
+                // set and save user
+                var user = new IdentityUser
+                {
+                    UserName = model.Username,
+                    Email = model.Email
+                };
 
-            var user = new IdentityUser
-            {
-                UserName = model.Username,
-                Email = model.Email
-            };
-            
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(user, CustomUserRoles.Visitor.ToString());
-                return Ok("Success");
-            }
+                var result = await userManager.CreateAsync(user, model.Password);
 
-            return BadRequest(result);
+                // if user is saved
+                if (result.Succeeded)
+                {
+                    // add role to user
+                    // admin is created in seeder. We create only visitor user for this method.
+                    await userManager.AddToRoleAsync(user, CustomUserRoles.Visitor.ToString());
+
+                    // save log message
+                    logger.LogInformation("User registered successfully.");
+
+                    return Ok();
+                }
+
+                // throw exception and save log if user is not saved
+                logger.LogError("Registration is unsuccessfull.");
+                throw new Exception("Registration is unsuccessfull.");
+            }
+            catch (Exception ex)
+            {
+                // throw global exception
+                throw new Exception(ex.Message);
+            }
         }
+
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDTO model)
         {
+            // validate body
             if (!ModelState.IsValid)
             {
                 return BadRequest("Validation Error");
             }
 
+            // get user
             var user = await userManager.FindByNameAsync(model.Username);
+
+            // return invalid user message if user is not found
             if(user == null)
             {
                 return BadRequest(new
@@ -75,7 +96,8 @@ namespace Library.Api.Controllers
                     message = "Invalid Username"
                 });
             }
-
+            
+            // attempt login
             var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (result.Succeeded)
             {
@@ -88,6 +110,7 @@ namespace Library.Api.Controllers
                 });
             }
 
+            // login attempt fail
             return BadRequest("Invalid Credentials");
         }
 
