@@ -35,13 +35,13 @@ namespace Library.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     logger.LogInformation("Validation error while borrowing a book");
-                    throw new Exception("Validation error while borrowing a book");
+                    return BadRequest("Validation error while borrowing a book");
                 }
 
                 // convert dto to entity
                 var borrow = mapper.Map<Borrowing>(borrowDTO);
 
-                // get book to check if available to be borrowed
+                // get book to check if the book is available to be borrowed
                 var book = bookService.Read(borrow.BookId);
                 if (book == null || book.IsBorrowed == true)
                 {
@@ -84,7 +84,7 @@ namespace Library.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     logger.LogInformation("Validation error while returning a book");
-                    throw new Exception("Validation error while returning a book");
+                    return BadRequest("Validation error while returning a book");
                 }
 
                 // get book to check if available to be returned

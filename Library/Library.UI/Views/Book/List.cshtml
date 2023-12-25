@@ -8,8 +8,11 @@
 
 <h1>Books</h1>
 
-<a asp-controller="Front" asp-action="Create" class="btn btn-success mt-2">Create</a>
-<br />
+@if ((@HttpContextAccessor.HttpContext.Session.GetString("Role") == "Admin"))
+{
+    <a asp-controller="Front" asp-action="Create" class="btn btn-success mt-2">Create</a>
+    <br />
+}
 <br />
 <div class="card">
     <div class="card-body">
@@ -41,7 +44,7 @@
                     }
 
                     <tr scop="row">
-                        <td style="width: 200px"><img src="./img/@book.ImageUrl" width="180"/></td>
+                        <td style="width: 200px"><img src="./img/@book.ImageUrl" width="180" alt="~/img/book.png"/></td>
                         <td>@book.Name</td>
                         <td>@book.Author</td>
                         <td>@book.Description</td>

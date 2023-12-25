@@ -8,10 +8,12 @@ namespace Library.UI.Controllers
 {
     public class BooksController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public BooksController(IHttpClientFactory httpClientFactory)
+        public BooksController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
+            this.configuration = configuration;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -41,7 +43,7 @@ namespace Library.UI.Controllers
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("http://localhost:5224/api/books"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/books"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
@@ -91,7 +93,7 @@ namespace Library.UI.Controllers
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Put,
-                    RequestUri = new Uri("http://localhost:5224/api/books"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/books"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
@@ -125,7 +127,7 @@ namespace Library.UI.Controllers
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Delete,
-                    RequestUri = new Uri("http://localhost:5224/api/books/" + model.Id),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/books/" + model.Id),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);

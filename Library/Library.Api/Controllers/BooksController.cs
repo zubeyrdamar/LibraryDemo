@@ -65,7 +65,7 @@ namespace Library.Api.Controllers
                 if (book == null)
                 {
                     logger.LogWarning("Book with given id is not found while reading a book's details.");
-                    throw new Exception("Book with given id is not found while reading a book's details.");
+                    return NotFound("Book with given id is not found while reading a book's details.");
                 }
 
                 // get user who borrowed the book
@@ -73,6 +73,10 @@ namespace Library.Api.Controllers
                 if (book.Borrowing != null)
                 {
                     user = await userManager.FindByIdAsync(book.Borrowing.UserId.ToString());
+                    if(user == null)
+                    {
+                        return NotFound("User does not exist");
+                    }
                 }
 
                 // convert book to dto
@@ -103,7 +107,7 @@ namespace Library.Api.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(AddBookDTO bookDTO)
         {
             try
@@ -112,7 +116,7 @@ namespace Library.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     logger.LogInformation("Validation error occured while creating a book.");
-                    throw new Exception("Validation error occured while creating a book.");
+                    return BadRequest("Validation error occured while creating a book.");
                 }
 
                 // set and save data
@@ -137,11 +141,19 @@ namespace Library.Api.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public IActionResult Update(Book book)
+        public IActionResult Update(BookDTO bookDTO)
         {
             try
             {
+                // validate body
+                if (!ModelState.IsValid)
+                {
+                    logger.LogInformation("Validation error occured while updating a book.");
+                    return BadRequest("Validation error occured while updating a book.");
+                }
+
                 // read the book
+                var book = mapper.Map<Book>(bookDTO);
                 var tempBook = service.Read(book.Id);
 
                 // throw error if the book does not exist

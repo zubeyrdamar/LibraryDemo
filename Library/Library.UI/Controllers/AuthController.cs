@@ -7,10 +7,12 @@ namespace Library.UI.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthController(IHttpClientFactory httpClientFactory)
+        public AuthController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
+            this.configuration = configuration;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -25,7 +27,7 @@ namespace Library.UI.Controllers
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("http://localhost:5224/api/auth/register"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/auth/register"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
@@ -57,7 +59,7 @@ namespace Library.UI.Controllers
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("http://localhost:5224/api/auth/login"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/auth/login"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);

@@ -38,7 +38,7 @@ namespace Library.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     logger.LogInformation("Validation error occured while attempting to register.");
-                    throw new Exception("Validation error occured while attempting to register.");
+                    return BadRequest("Validation error occured while attempting to register.");
                 }
                 
                 // set and save user
@@ -91,7 +91,7 @@ namespace Library.Api.Controllers
             // return invalid user message if user is not found
             if(user == null)
             {
-                return BadRequest(new
+                return NotFound(new
                 {
                     message = "Invalid Username"
                 });
