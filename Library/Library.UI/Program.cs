@@ -39,7 +39,9 @@ app.UseSession();
 */
 
 // Front
+app.MapControllerRoute(name: "entry", pattern: "/", defaults: new { controller = "Front", action = "Entry" });
 app.MapControllerRoute(name: "error-view", pattern: "/error", defaults: new { controller = "Front", action = "Error" });
+
 app.MapControllerRoute(name: "register-view", pattern: "/register-view", defaults: new { controller = "Front", action = "Register" });
 app.MapControllerRoute(name: "login-view", pattern: "/login-view", defaults: new { controller = "Front", action = "Login" });
 app.MapControllerRoute(name: "book-list-view", pattern: "/book-list-view", defaults: new { controller = "Front", action = "Books" });
