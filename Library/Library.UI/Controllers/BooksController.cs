@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text;
+using System.Net.Http.Headers;
 
 namespace Library.UI.Controllers
 {
@@ -36,6 +37,7 @@ namespace Library.UI.Controllers
 
                 // request
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
@@ -85,6 +87,7 @@ namespace Library.UI.Controllers
 
                 // request
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Put,
@@ -118,6 +121,7 @@ namespace Library.UI.Controllers
 
                 // request
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Delete,

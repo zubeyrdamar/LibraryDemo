@@ -1,5 +1,6 @@
 ﻿using Library.UI.Models.Books;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
 namespace Library.UI.Controllers
 {
@@ -34,6 +35,7 @@ namespace Library.UI.Controllers
             try
             {
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization =  new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpResponseMessage = await client.GetAsync("http://localhost:5224/api/books");
                 httpResponseMessage.EnsureSuccessStatusCode();
 
@@ -54,6 +56,7 @@ namespace Library.UI.Controllers
             try
             {
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpResponseMessage = await client.GetAsync($"http://localhost:5224/api/books/{id}");
                 httpResponseMessage.EnsureSuccessStatusCode();
 
@@ -78,6 +81,7 @@ namespace Library.UI.Controllers
             try
             {
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpResponseMessage = await client.GetAsync($"http://localhost:5224/api/books/{id}");
                 httpResponseMessage.EnsureSuccessStatusCode();
 
