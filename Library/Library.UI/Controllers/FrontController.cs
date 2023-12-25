@@ -21,6 +21,11 @@ namespace Library.UI.Controllers
             return View("~/Views/Error/HttpError.cshtml");
         }
 
+        public IActionResult Entry()
+        {
+            return RedirectToAction("Login", "Front");
+        }
+
         public IActionResult Register()
         {
             return View("~/Views/Auth/Register.cshtml");
