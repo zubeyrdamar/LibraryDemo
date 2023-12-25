@@ -6,10 +6,12 @@ namespace Library.UI.Controllers
 {
     public class FrontController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public FrontController(IHttpClientFactory httpClientFactory)
+        public FrontController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
+            this.configuration = configuration;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -36,7 +38,7 @@ namespace Library.UI.Controllers
             {
                 var client = httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization =  new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
-                var httpResponseMessage = await client.GetAsync("http://localhost:5224/api/books");
+                var httpResponseMessage = await client.GetAsync(configuration.GetValue<string>("ApiUrl") + "/books");
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 List<BookViewModel> response = [.. await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<BookViewModel>>()];
@@ -57,7 +59,7 @@ namespace Library.UI.Controllers
             {
                 var client = httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
-                var httpResponseMessage = await client.GetAsync($"http://localhost:5224/api/books/{id}");
+                var httpResponseMessage = await client.GetAsync(configuration.GetValue<string>("ApiUrl") + "/books/" + id);
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 BookViewModel response = await httpResponseMessage.Content.ReadFromJsonAsync<BookViewModel>();
@@ -82,7 +84,7 @@ namespace Library.UI.Controllers
             {
                 var client = httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
-                var httpResponseMessage = await client.GetAsync($"http://localhost:5224/api/books/{id}");
+                var httpResponseMessage = await client.GetAsync(configuration.GetValue<string>("ApiUrl") + "/books/" + id);
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 UpdateBookViewModel response = await httpResponseMessage.Content.ReadFromJsonAsync<UpdateBookViewModel>();

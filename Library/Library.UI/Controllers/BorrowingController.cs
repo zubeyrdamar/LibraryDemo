@@ -2,15 +2,19 @@
 using System.Text.Json;
 using System.Text;
 using Library.UI.Models.Borrowing;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
 
 namespace Library.UI.Controllers
 {
     public class BorrowingController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public BorrowingController(IHttpClientFactory httpClientFactory)
+        public BorrowingController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
+            this.configuration = configuration;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -23,10 +27,11 @@ namespace Library.UI.Controllers
 
                 // request
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("http://localhost:5224/api/borrowing/borrow"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/borrowing/borrow"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
@@ -56,10 +61,11 @@ namespace Library.UI.Controllers
 
                 // request
                 var client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
                 var httpRequestMessage = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("http://localhost:5224/api/borrowing/return"),
+                    RequestUri = new Uri(configuration.GetValue<string>("ApiUrl") + "/borrowing/return"),
                     Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
                 };
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
