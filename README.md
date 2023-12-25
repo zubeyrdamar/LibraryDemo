@@ -9,6 +9,8 @@ Projeyi lokal cihazınızda çalıştırmak için bu repository'i klonlayın. So
 
 Bir sonraki aşamada "Library.UI Debug Properties" kısmından başlangıç url'ini "login-view" şeklinde ayarlayın.
 
+Son olarak UI katmanında "appsettings.json" dosyasında tanımladığımız "ApiUrl": "http://localhost:5224/api" yerine kendi api adresinizi veriniz
+
 (Migration ve database update komutlarını başlatma öncesinde çalıştırmanız önerilir.)
     
 ## Documentation
